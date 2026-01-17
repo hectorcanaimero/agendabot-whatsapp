@@ -1,36 +1,169 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AgendaBot - Sistema SaaS de Agendamiento vía WhatsApp
 
-## Getting Started
+Sistema completo para automatizar la atención al cliente y agendamiento de citas a través de WhatsApp, con integración a Google Calendar y agente de IA con DeepSeek.
 
-First, run the development server:
+## Características
+
+- **Agente de IA con DeepSeek**: Responde automáticamente a los clientes y gestiona el agendamiento de citas
+- **Integración con WhatsApp**: Conecta tu número de WhatsApp Business a través de Evolution API
+- **Sincronización con Google Calendar**: Las citas se crean automáticamente en tu calendario
+- **Horarios personalizables**: Define días, horarios de atención y duración de citas
+- **Prompt personalizable**: Ajusta el comportamiento del agente sin perder la funcionalidad de agendamiento
+- **Dashboard completo**: Visualiza conversaciones, citas y estadísticas
+- **Multi-tenant**: Cada usuario tiene su propio negocio, configuración y datos
+
+## Stack Tecnológico
+
+- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS, shadcn/ui
+- **Backend**: Next.js API Routes, Supabase
+- **Base de datos**: PostgreSQL (Supabase)
+- **Autenticación**: Supabase Auth
+- **IA**: DeepSeek API
+- **WhatsApp**: Evolution API
+- **Calendario**: Google Calendar API
+
+## Requisitos Previos
+
+1. Cuenta en [Supabase](https://supabase.com)
+2. API Key de [DeepSeek](https://deepseek.com)
+3. Instancia de [Evolution API](https://github.com/EvolutionAPI/evolution-api)
+4. Proyecto en [Google Cloud Console](https://console.cloud.google.com) con Calendar API habilitada
+
+## Instalación
+
+### 1. Clonar el repositorio
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd whatsapp-scheduler
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Instalar dependencias
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Configurar variables de entorno
 
-## Learn More
+Copia el archivo `.env.example` a `.env.local`:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cp .env.example .env.local
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Completa las variables:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=tu_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
 
-## Deploy on Vercel
+# DeepSeek API
+DEEPSEEK_API_KEY=tu_deepseek_api_key
+DEEPSEEK_API_URL=https://api.deepseek.com
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Google OAuth
+GOOGLE_CLIENT_ID=tu_google_client_id
+GOOGLE_CLIENT_SECRET=tu_google_client_secret
+GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# App
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+### 4. Configurar Supabase
+
+1. Crea un nuevo proyecto en Supabase
+2. Ve a SQL Editor y ejecuta el contenido de `supabase/schema.sql`
+3. Copia las credenciales del proyecto a tu `.env.local`
+
+### 5. Configurar Google OAuth
+
+1. Ve a [Google Cloud Console](https://console.cloud.google.com)
+2. Crea un nuevo proyecto o selecciona uno existente
+3. Habilita la API de Google Calendar
+4. Configura la pantalla de consentimiento OAuth
+5. Crea credenciales OAuth 2.0 (Aplicación web)
+6. Añade `http://localhost:3000/api/auth/google/callback` como URI de redirección autorizada
+7. Copia el Client ID y Client Secret a tu `.env.local`
+
+### 6. Iniciar el servidor de desarrollo
+
+```bash
+pnpm dev
+```
+
+La aplicación estará disponible en `http://localhost:3000`
+
+## Configuración de Evolution API
+
+### Webhook
+
+Configura el webhook de tu instancia de Evolution API para apuntar a:
+
+```
+https://tu-dominio.com/api/webhook/evolution
+```
+
+Eventos a habilitar:
+- MESSAGES_UPSERT
+- MESSAGES_UPDATE
+- CONNECTION_UPDATE
+- QRCODE_UPDATED
+
+## Uso
+
+### 1. Registro e inicio de sesión
+
+1. Accede a `/register` para crear una cuenta
+2. Confirma tu email (si está habilitado en Supabase)
+3. Inicia sesión en `/login`
+
+### 2. Configuración inicial
+
+1. **Negocio**: Define el nombre y duración base de citas
+2. **Horarios**: Configura los días y horarios de atención
+3. **WhatsApp**: Conecta tu número escaneando el QR
+4. **Google Calendar**: Autoriza el acceso a tu calendario
+5. **Agente**: Añade servicios y personaliza el prompt
+
+### 3. Personalización del Agente
+
+El agente tiene un comportamiento base que incluye:
+- Saludar y presentar servicios
+- Mostrar horarios disponibles
+- Confirmar citas
+- Cancelar citas
+- Sincronizar con Google Calendar
+
+Puedes añadir instrucciones adicionales en el campo "Instrucciones adicionales" sin perder estas funcionalidades base.
+
+## Estructura del Proyecto
+
+```
+whatsapp-scheduler/
+├── src/
+│   ├── app/
+│   │   ├── (auth)/          # Páginas de autenticación
+│   │   ├── (dashboard)/     # Dashboard y páginas protegidas
+│   │   ├── api/             # API Routes
+│   │   └── page.tsx         # Landing page
+│   ├── components/
+│   │   ├── ui/              # Componentes shadcn/ui
+│   │   └── dashboard/       # Componentes del dashboard
+│   ├── lib/
+│   │   ├── supabase/        # Clientes de Supabase
+│   │   ├── evolution/       # Cliente de Evolution API
+│   │   ├── deepseek/        # Cliente de DeepSeek
+│   │   └── google/          # Cliente de Google Calendar
+│   └── types/               # Tipos TypeScript
+├── supabase/
+│   └── schema.sql           # Esquema de base de datos
+└── public/                  # Archivos estáticos
+```
+
+## Licencia
+
+MIT
