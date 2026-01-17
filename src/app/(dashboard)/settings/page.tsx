@@ -151,11 +151,11 @@ export default function SettingsPage() {
         }
 
         // Check Google Calendar connection
-        const { data: calendarData } = await supabase
+        const { data: calendarData, error: calendarError } = await supabase
           .from("google_calendar_connections")
           .select("*")
           .eq("business_id", businessData.id)
-          .single();
+          .maybeSingle();
 
         setCalendarConnected(!!calendarData);
       } else {
@@ -335,33 +335,52 @@ export default function SettingsPage() {
       // First save the config
       await saveWhatsAppConfig();
 
-      // Get QR code from Evolution API
-      const response = await fetch(`${evolutionApiUrl}/instance/connect/${instanceName}`, {
-        method: "GET",
+      // Wait a bit for the save to complete and get the instance ID
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Reload to get the latest instance data
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: instanceData } = await supabase
+        .from("whatsapp_instances")
+        .select("*")
+        .eq("business_id", business.id)
+        .single();
+
+      if (!instanceData) {
+        toast.error("Error al obtener la instancia de WhatsApp");
+        return;
+      }
+
+      // Call our backend API to connect
+      const response = await fetch("/api/whatsapp/connect", {
+        method: "POST",
         headers: {
-          apikey: evolutionApiKey,
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          instanceId: instanceData.id,
+        }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Error al conectar con Evolution API");
+        throw new Error(data.details || data.error || "Error al conectar con Evolution API");
       }
 
-      const data = await response.json();
-      
-      if (data.base64) {
-        setQrCode(data.base64);
+      if (data.qrCode) {
+        setQrCode(data.qrCode);
         toast.success("Escanea el código QR con WhatsApp");
-      } else if (data.instance?.state === "open") {
+        setWhatsappInstance(instanceData);
+      } else if (data.status === "open") {
         toast.success("WhatsApp ya está conectado");
-        await supabase
-          .from("whatsapp_instances")
-          .update({ status: "connected" })
-          .eq("id", whatsappInstance?.id);
+        setWhatsappInstance({ ...instanceData, status: "connected" });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error connecting WhatsApp:", error);
-      toast.error("Error al conectar WhatsApp");
+      toast.error(error.message || "Error al conectar WhatsApp");
     } finally {
       setConnectingWhatsApp(false);
     }
@@ -761,9 +780,13 @@ export default function SettingsPage() {
                     Escanea este código QR con WhatsApp
                   </p>
                   <img
-                    src={`data:image/png;base64,${qrCode}`}
+                    src={qrCode.startsWith('data:') ? qrCode : `data:image/png;base64,${qrCode}`}
                     alt="QR Code"
                     className="mx-auto max-w-[250px]"
+                    onError={(e) => {
+                      console.error('Error loading QR code');
+                      e.currentTarget.style.display = 'none';
+                    }}
                   />
                   <Button
                     variant="ghost"

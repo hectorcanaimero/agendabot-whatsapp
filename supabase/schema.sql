@@ -277,3 +277,40 @@ CREATE TRIGGER update_agent_configs_updated_at
 CREATE TRIGGER update_appointments_updated_at
   BEFORE UPDATE ON public.appointments
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+-- Client preferences table for memory and personalization
+CREATE TABLE IF NOT EXISTS public.client_preferences (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  business_id UUID REFERENCES public.businesses(id) ON DELETE CASCADE NOT NULL,
+  contact_phone TEXT NOT NULL,
+  contact_name TEXT,
+  preferred_language TEXT DEFAULT 'es' CHECK (preferred_language IN ('es', 'en', 'pt')),
+  preferred_service TEXT,
+  notes TEXT,
+  last_appointment_date TIMESTAMPTZ,
+  total_appointments INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(business_id, contact_phone)
+);
+
+-- Index for client preferences
+CREATE INDEX IF NOT EXISTS idx_client_preferences_business_id ON public.client_preferences(business_id);
+CREATE INDEX IF NOT EXISTS idx_client_preferences_contact_phone ON public.client_preferences(contact_phone);
+
+-- RLS for client preferences
+ALTER TABLE public.client_preferences ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage client preferences" ON public.client_preferences
+  FOR ALL USING (
+    EXISTS (
+      SELECT 1 FROM public.businesses
+      WHERE businesses.id = client_preferences.business_id
+      AND businesses.user_id = auth.uid()
+    )
+  );
+
+-- Trigger for client preferences updated_at
+CREATE TRIGGER update_client_preferences_updated_at
+  BEFORE UPDATE ON public.client_preferences
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();

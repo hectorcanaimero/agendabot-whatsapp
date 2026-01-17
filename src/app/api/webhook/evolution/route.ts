@@ -6,6 +6,7 @@ import {
   parseAppointmentData,
   cleanResponseForUser,
   generateAvailableSlots,
+  validateAppointmentData,
 } from '@/lib/deepseek/client';
 import {
   createCalendarEvent,
@@ -13,6 +14,7 @@ import {
 } from '@/lib/google/calendar';
 import type { EvolutionWebhookPayload, DeepSeekMessage, WorkingHours, Service } from '@/types';
 import { addMinutes, format, parse } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 export async function POST(request: NextRequest) {
   try {
@@ -112,11 +114,13 @@ export async function POST(request: NextRequest) {
       .in('status', ['scheduled', 'confirmed'])
       .gte('start_time', new Date().toISOString());
 
-    // Generate available slots
+    // Generate available slots with 5-minute buffer between appointments
     const availableSlots = generateAvailableSlots(
       (workingHours || []) as WorkingHours[],
       instance.businesses?.appointment_duration || 30,
-      existingAppointments || []
+      existingAppointments || [],
+      7, // days ahead
+      5 // 5-minute buffer between appointments
     );
 
     // Build messages for AI
@@ -141,6 +145,37 @@ export async function POST(request: NextRequest) {
 
     // Handle appointment actions
     if (appointmentData) {
+      // Validate appointment data
+      const validation = validateAppointmentData(appointmentData, {
+        availableSlots,
+        services: (agentConfig?.services || []) as Service[],
+        workingHours: (workingHours || []) as WorkingHours[],
+      });
+
+      if (!validation.valid) {
+        // Send validation error message to user
+        await supabase.from('messages').insert({
+          conversation_id: conversation.id,
+          content: `❌ ${validation.error}. Por favor, intenta nuevamente.`,
+          type: 'text',
+          direction: 'outbound',
+          status: 'sent',
+        });
+
+        const evolutionClient = createEvolutionClient(
+          instance.api_url,
+          instance.api_key,
+          instance.instance_name
+        );
+
+        await evolutionClient.sendText({
+          number: contactPhone,
+          text: `❌ ${validation.error}. Por favor, intenta nuevamente.`,
+        });
+
+        return NextResponse.json({ status: 'validation_error', error: validation.error });
+      }
+
       if (appointmentData.action === 'schedule' && appointmentData.date && appointmentData.time) {
         const startTime = parse(
           `${appointmentData.date} ${appointmentData.time}`,
@@ -239,6 +274,75 @@ export async function POST(request: NextRequest) {
             }
           }
         }
+      } else if (appointmentData.action === 'check_availability' && appointmentData.date) {
+        // Handle availability check for specific date
+        const requestedDate = new Date(appointmentData.date);
+        const dayOfWeek = requestedDate.getDay();
+
+        // Find working hours for that day
+        const dayHours = (workingHours || []).find(
+          (h) => h.day_of_week === dayOfWeek && h.is_active
+        );
+
+        if (!dayHours) {
+          const daysMap = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+          const availabilityMessage = `Lo siento, no atendemos los ${daysMap[dayOfWeek]}s.`;
+
+          await supabase.from('messages').insert({
+            conversation_id: conversation.id,
+            content: availabilityMessage,
+            type: 'text',
+            direction: 'outbound',
+            status: 'sent',
+          });
+
+          const evolutionClient = createEvolutionClient(
+            instance.api_url,
+            instance.api_key,
+            instance.instance_name
+          );
+
+          await evolutionClient.sendText({
+            number: contactPhone,
+            text: availabilityMessage,
+          });
+
+          return NextResponse.json({ status: 'availability_checked' });
+        }
+
+        // Generate slots for that specific date
+        const slotsForDate = generateAvailableSlots(
+          [dayHours],
+          instance.businesses?.appointment_duration || 30,
+          existingAppointments || [],
+          1, // Only 1 day (the requested date)
+          5 // 5-minute buffer
+        ).filter((slot) => slot.includes(format(requestedDate, "d 'de' MMMM", { locale: es })));
+
+        const availabilityMessage = slotsForDate.length > 0
+          ? `Horarios disponibles para ${format(requestedDate, "EEEE d 'de' MMMM", { locale: es })}:\n${slotsForDate.map((s) => `• ${s.split('a las ')[1]}`).join('\n')}`
+          : `Lo siento, no hay horarios disponibles para ${format(requestedDate, "EEEE d 'de' MMMM", { locale: es })}.`;
+
+        await supabase.from('messages').insert({
+          conversation_id: conversation.id,
+          content: availabilityMessage,
+          type: 'text',
+          direction: 'outbound',
+          status: 'sent',
+        });
+
+        const evolutionClient = createEvolutionClient(
+          instance.api_url,
+          instance.api_key,
+          instance.instance_name
+        );
+
+        await evolutionClient.sendText({
+          number: contactPhone,
+          text: availabilityMessage,
+        });
+
+        return NextResponse.json({ status: 'availability_checked' });
       }
     }
 
