@@ -127,7 +127,9 @@ export async function POST(request: NextRequest) {
 
     // Generate AI response
     const aiResponse = await generateAgentResponse(messages, {
+      businessId: businessId,
       businessName: instance.businesses?.name || 'Negocio',
+      agentName: agentConfig?.agent_name,
       services: (agentConfig?.services || []) as Service[],
       workingHours: (workingHours || []) as WorkingHours[],
       appointmentDuration: instance.businesses?.appointment_duration || 30,

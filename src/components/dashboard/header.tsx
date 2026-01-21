@@ -125,7 +125,8 @@ export function DashboardHeader({ user }: HeaderProps) {
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/settings" className="cursor-pointer">
-                  <Settings className="mr-2 h-4 w-4"                  Configuraçõesções
+                  <Settings className="mr-2 h-4 w-4" />
+                  Configurações
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />

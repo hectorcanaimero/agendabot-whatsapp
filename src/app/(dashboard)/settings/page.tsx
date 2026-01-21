@@ -66,6 +66,7 @@ export default function SettingsPage() {
   const [workingHours, setWorkingHours] = useState<WorkingHour[]>([]);
 
   // Agent config state
+  const [agentName, setAgentName] = useState("Assistente");
   const [customPrompt, setCustomPrompt] = useState("");
   const [welcomeMessage, setWelcomeMessage] = useState("");
   const [services, setServices] = useState<Service[]>([]);
@@ -129,6 +130,7 @@ export default function SettingsPage() {
           .single();
 
         if (agentData) {
+          setAgentName(agentData.agent_name || "Assistente");
           setCustomPrompt(agentData.custom_prompt || "");
           setWelcomeMessage(agentData.welcome_message || "");
           setServices(agentData.services || []);
@@ -257,6 +259,7 @@ export default function SettingsPage() {
         await supabase
           .from("agent_configs")
           .update({
+            agent_name: agentName,
             custom_prompt: customPrompt,
             welcome_message: welcomeMessage,
             services: services,
@@ -265,6 +268,7 @@ export default function SettingsPage() {
       } else {
         await supabase.from("agent_configs").insert({
           business_id: business.id,
+          agent_name: agentName,
           custom_prompt: customPrompt,
           welcome_message: welcomeMessage,
           services: services,
@@ -636,7 +640,20 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="welcomeMessage">Mensaje de bienvenida</Label>
+                <Label htmlFor="agentName">Nome do Agente</Label>
+                <Input
+                  id="agentName"
+                  value={agentName}
+                  onChange={(e) => setAgentName(e.target.value)}
+                  placeholder="Assistente"
+                />
+                <p className="text-xs text-muted-foreground">
+                  O nome que o agente usará para se apresentar aos clientes
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="welcomeMessage">Mensagem de boas-vindas</Label>
                 <Textarea
                   id="welcomeMessage"
                   value={welcomeMessage}

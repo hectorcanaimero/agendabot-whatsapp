@@ -67,9 +67,10 @@ CREATE TABLE IF NOT EXISTS public.google_calendar_connections (
 CREATE TABLE IF NOT EXISTS public.agent_configs (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   business_id UUID REFERENCES public.businesses(id) ON DELETE CASCADE NOT NULL UNIQUE,
-  base_prompt TEXT DEFAULT 'Eres un asistente virtual profesional de atención al cliente.',
+  agent_name TEXT DEFAULT 'Assistente',
+  base_prompt TEXT DEFAULT 'Você é um assistente virtual profissional de atendimento ao cliente.',
   custom_prompt TEXT,
-  welcome_message TEXT DEFAULT '¡Hola! Bienvenido. ¿En qué puedo ayudarte hoy?',
+  welcome_message TEXT DEFAULT 'Olá! Bem-vindo. Como posso ajudá-lo hoje?',
   services JSONB DEFAULT '[]'::jsonb,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()

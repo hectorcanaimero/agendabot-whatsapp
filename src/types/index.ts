@@ -57,6 +57,7 @@ export interface GoogleCalendarConnection {
 export interface AgentConfig {
   id: string;
   business_id: string;
+  agent_name?: string;
   base_prompt: string;
   custom_prompt?: string;
   welcome_message: string;
@@ -144,7 +145,9 @@ export interface DeepSeekMessage {
 }
 
 export interface AgentContext {
+  businessId: string;
   businessName: string;
+  agentName?: string;
   services: Service[];
   workingHours: WorkingHours[];
   appointmentDuration: number;
