@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageSquare, User, Clock } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
+import { ptBR } from "date-fns/locale";
 import Link from "next/link";
 
 export default async function ConversationsPage() {
@@ -55,9 +55,9 @@ export default async function ConversationsPage() {
   return (
     <div className="space-y-6 animate-fade-in pb-20 lg:pb-6">
       <div>
-        <h1 className="text-2xl font-bold">Conversaciones</h1>
+        <h1 className="text-2xl font-bold">Conversas</h1>
         <p className="text-muted-foreground">
-          Historial de conversaciones con clientes
+          Histórico de conversas com clientes
         </p>
       </div>
 
@@ -65,9 +65,9 @@ export default async function ConversationsPage() {
         {/* Conversations list */}
         <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle className="text-lg">Contactos</CardTitle>
+            <CardTitle className="text-lg">Contatos</CardTitle>
             <CardDescription>
-              {processedConversations?.length || 0} conversaciones
+              {processedConversations?.length || 0} conversas
             </CardDescription>
           </CardHeader>
           <CardContent className="p-0">
@@ -92,7 +92,7 @@ export default async function ConversationsPage() {
                             variant={conv.status === "active" ? "default" : "secondary"}
                             className="shrink-0"
                           >
-                            {conv.status === "active" ? "Activa" : "Cerrada"}
+                            {conv.status === "active" ? "Ativa" : "Fechada"}
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground truncate">
@@ -100,14 +100,14 @@ export default async function ConversationsPage() {
                         </p>
                         {conv.lastMessage && (
                           <p className="text-sm text-muted-foreground truncate mt-1">
-                            {conv.lastMessage.direction === "outbound" && "Tú: "}
+                            {conv.lastMessage.direction === "outbound" && "Você: "}
                             {conv.lastMessage.content}
                           </p>
                         )}
                         <p className="text-xs text-muted-foreground mt-1">
                           {formatDistanceToNow(new Date(conv.last_message_at), {
                             addSuffix: true,
-                            locale: es,
+                            locale: ptBR,
                           })}
                         </p>
                       </div>
@@ -117,9 +117,9 @@ export default async function ConversationsPage() {
               ) : (
                 <div className="text-center py-12 text-muted-foreground">
                   <MessageSquare className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>No hay conversaciones aún</p>
+                  <p>Não há conversas ainda</p>
                   <p className="text-sm mt-1">
-                    Las conversaciones aparecerán cuando los clientes te escriban por WhatsApp
+                    As conversas aparecerão quando os clientes te escreverem pelo WhatsApp
                   </p>
                 </div>
               )}
@@ -132,9 +132,9 @@ export default async function ConversationsPage() {
           <CardContent className="flex items-center justify-center h-[650px] text-muted-foreground">
             <div className="text-center">
               <MessageSquare className="h-16 w-16 mx-auto mb-4 opacity-30" />
-              <p className="text-lg font-medium">Selecciona una conversación</p>
+              <p className="text-lg font-medium">Selecione uma conversa</p>
               <p className="text-sm">
-                Haz clic en un contacto para ver el historial de mensajes
+                Clique em um contato para ver o histórico de mensagens
               </p>
             </div>
           </CardContent>

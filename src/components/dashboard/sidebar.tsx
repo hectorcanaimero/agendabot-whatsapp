@@ -100,7 +100,7 @@ export function DashboardSidebar({ user, business }: SidebarProps) {
                     <div className="flex items-center justify-between text-sm">
                       <span className="flex items-center gap-2">
                         <Calendar className="h-4 w-4" />
-                        Calendar
+                        Calendário
                       </span>
                       <span className="flex items-center gap-1">
                         <span className="status-dot disconnected" />
