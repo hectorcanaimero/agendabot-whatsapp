@@ -27,11 +27,11 @@ import {
 
 const DAYS = [
   { value: 0, label: "Domingo" },
-  { value: 1, label: "Lunes" },
-  { value: 2, label: "Martes" },
-  { value: 3, label: "Miércoles" },
-  { value: 4, label: "Jueves" },
-  { value: 5, label: "Viernes" },
+  { value: 1, label: "Segunda-feira" },
+  { value: 2, label: "Terça-feira" },
+  { value: 3, label: "Quarta-feira" },
+  { value: 4, label: "Quinta-feira" },
+  { value: 5, label: "Sexta-feira" },
   { value: 6, label: "Sábado" },
 ];
 
@@ -230,7 +230,7 @@ export default function SettingsPage() {
         );
       }
 
-      toast.success("Configuración guardada");
+      toast.success("Configurações guardada");
     } catch (error) {
       console.error("Error saving:", error);
       toast.error("Error al guardar");
@@ -271,7 +271,7 @@ export default function SettingsPage() {
         });
       }
 
-      toast.success("Configuración del agente guardada");
+      toast.success("Configurações del agente guardada");
     } catch (error) {
       console.error("Error saving agent config:", error);
       toast.error("Error al guardar");
@@ -309,9 +309,9 @@ export default function SettingsPage() {
         setWhatsappInstance(newInstance);
       }
 
-      toast.success("Configuración de WhatsApp guardada");
+      toast.success("Configurações de WhatsApp guardada");
     } catch (error) {
-      console.error("Error saving WhatsApp config:", error);
+      console.error("Erro ao salvar configurações do WhatsApp:", error);
       toast.error("Error al guardar");
     } finally {
       setSaving(false);
@@ -346,17 +346,17 @@ export default function SettingsPage() {
       
       if (data.base64) {
         setQrCode(data.base64);
-        toast.success("Escanea el código QR con WhatsApp");
+        toast.success("Escaneie o código QR com o WhatsApp");
       } else if (data.instance?.state === "open") {
-        toast.success("WhatsApp ya está conectado");
+        toast.success("WhatsApp já está conectado");
         await supabase
           .from("whatsapp_instances")
           .update({ status: "connected" })
           .eq("id", whatsappInstance?.id);
       }
     } catch (error) {
-      console.error("Error connecting WhatsApp:", error);
-      toast.error("Error al conectar WhatsApp");
+      console.error("Erro ao conectar WhatsApp:", error);
+      toast.error("Erro ao conectar WhatsApp");
     } finally {
       setConnectingWhatsApp(false);
     }
@@ -413,9 +413,9 @@ export default function SettingsPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-fade-in pb-20 lg:pb-6">
       <div>
-        <h1 className="text-2xl font-bold">Configuración</h1>
+        <h1 className="text-2xl font-bold">Configurações</h1>
         <p className="text-muted-foreground">
-          Configura tu negocio, horarios y agente de WhatsApp
+          Configure seu negócio, horários e agente de WhatsApp
         </p>
       </div>
 
@@ -423,11 +423,11 @@ export default function SettingsPage() {
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="business" className="gap-2">
             <Building2 className="h-4 w-4" />
-            <span className="hidden sm:inline">Negocio</span>
+            <span className="hidden sm:inline">Negócio</span>
           </TabsTrigger>
           <TabsTrigger value="schedule" className="gap-2">
             <Clock className="h-4 w-4" />
-            <span className="hidden sm:inline">Horarios</span>
+            <span className="hidden sm:inline">Horários</span>
           </TabsTrigger>
           <TabsTrigger value="agent" className="gap-2">
             <Bot className="h-4 w-4" />
@@ -443,14 +443,14 @@ export default function SettingsPage() {
         <TabsContent value="business">
           <Card>
             <CardHeader>
-              <CardTitle>Información del Negocio</CardTitle>
+              <CardTitle>Información del Negócio</CardTitle>
               <CardDescription>
                 Datos básicos de tu negocio
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="businessName">Nombre del negocio</Label>
+                <Label htmlFor="businessName">Nome do negócio</Label>
                 <Input
                   id="businessName"
                   value={businessName}
@@ -460,7 +460,7 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="businessDescription">Descripción</Label>
+                <Label htmlFor="businessDescription">Descrição</Label>
                 <Textarea
                   id="businessDescription"
                   value={businessDescription}
@@ -472,7 +472,7 @@ export default function SettingsPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="appointmentDuration">
-                  Duración base de citas (minutos)
+                  Duração base dos agendamentos (minutos)
                 </Label>
                 <Input
                   id="appointmentDuration"
@@ -494,7 +494,7 @@ export default function SettingsPage() {
                 ) : (
                   <Save className="mr-2 h-4 w-4" />
                 )}
-                Guardar
+                Salvar
               </Button>
             </CardContent>
           </Card>
@@ -504,7 +504,7 @@ export default function SettingsPage() {
         <TabsContent value="schedule">
           <Card>
             <CardHeader>
-              <CardTitle>Horarios de Atención</CardTitle>
+              <CardTitle>Horários de Atención</CardTitle>
               <CardDescription>
                 Define los días y horarios en que atiendes
               </CardDescription>
@@ -555,7 +555,7 @@ export default function SettingsPage() {
                 ) : (
                   <Save className="mr-2 h-4 w-4" />
                 )}
-                Guardar Horarios
+                Salvar Horários
               </Button>
             </CardContent>
           </Card>
@@ -565,7 +565,7 @@ export default function SettingsPage() {
         <TabsContent value="agent" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Servicios</CardTitle>
+              <CardTitle>Serviços</CardTitle>
               <CardDescription>
                 Define los servicios que ofreces
               </CardDescription>
@@ -579,7 +579,7 @@ export default function SettingsPage() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 grid gap-3 sm:grid-cols-2">
                       <div className="space-y-1">
-                        <Label>Nombre</Label>
+                        <Label>Nome</Label>
                         <Input
                           value={service.name}
                           onChange={(e) =>
@@ -589,7 +589,7 @@ export default function SettingsPage() {
                         />
                       </div>
                       <div className="space-y-1">
-                        <Label>Duración (min)</Label>
+                        <Label>Duração (min)</Label>
                         <Input
                           type="number"
                           value={service.duration}
@@ -608,13 +608,13 @@ export default function SettingsPage() {
                     </Button>
                   </div>
                   <div className="space-y-1">
-                    <Label>Descripción</Label>
+                    <Label>Descrição</Label>
                     <Input
                       value={service.description}
                       onChange={(e) =>
                         updateService(service.id, "description", e.target.value)
                       }
-                      placeholder="Descripción del servicio..."
+                      placeholder="Descrição del servicio..."
                     />
                   </div>
                 </div>
@@ -622,14 +622,14 @@ export default function SettingsPage() {
 
               <Button variant="outline" onClick={addService}>
                 <Plus className="mr-2 h-4 w-4" />
-                Agregar Servicio
+                Adicionar Serviço
               </Button>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Personalización del Agente</CardTitle>
+              <CardTitle>Personalização do Agente</CardTitle>
               <CardDescription>
                 Personaliza cómo responde tu agente sin perder la funcionalidad de agendamiento
               </CardDescription>
@@ -641,7 +641,7 @@ export default function SettingsPage() {
                   id="welcomeMessage"
                   value={welcomeMessage}
                   onChange={(e) => setWelcomeMessage(e.target.value)}
-                  placeholder="¡Hola! Bienvenido a [Tu Negocio]. ¿En qué puedo ayudarte?"
+                  placeholder="¡Hola! Bienvenido a [Tu Negócio]. ¿En qué puedo ayudarte?"
                   rows={2}
                 />
               </div>
@@ -670,7 +670,7 @@ export default function SettingsPage() {
                   <li>✓ Muestra horarios disponibles para agendar</li>
                   <li>✓ Confirma citas con fecha, hora y servicio</li>
                   <li>✓ Permite cancelar citas existentes</li>
-                  <li>✓ Sincroniza automáticamente con Google Calendar</li>
+                  <li>✓ Sincroniza automaticamente com o Google Calendar</li>
                 </ul>
               </div>
 
@@ -680,7 +680,7 @@ export default function SettingsPage() {
                 ) : (
                   <Save className="mr-2 h-4 w-4" />
                 )}
-                Guardar Configuración del Agente
+                Salvar Configurações del Agente
               </Button>
             </CardContent>
           </Card>
@@ -696,7 +696,7 @@ export default function SettingsPage() {
                 WhatsApp (Evolution API)
               </CardTitle>
               <CardDescription>
-                Conecta tu número de WhatsApp para recibir mensajes
+                Conecte seu número do WhatsApp para receber mensagens
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -705,7 +705,7 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="instanceName">Nombre de la instancia</Label>
+                <Label htmlFor="instanceName">Nome de la instancia</Label>
                 <Input
                   id="instanceName"
                   value={instanceName}
@@ -713,14 +713,14 @@ export default function SettingsPage() {
                   placeholder="mi-negocio"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Nombre único para identificar tu instancia de WhatsApp
+                  Nome único para identificar tu instancia de WhatsApp
                 </p>
               </div>
 
               <div className="flex gap-2">
                 <Button onClick={saveWhatsAppConfig} variant="outline" disabled={saving}>
                   <Save className="mr-2 h-4 w-4" />
-                  Guardar
+                  Salvar
                 </Button>
                 <Button onClick={connectWhatsApp} disabled={connectingWhatsApp}>
                   {connectingWhatsApp ? (
@@ -735,7 +735,7 @@ export default function SettingsPage() {
               {qrCode && (
                 <div className="p-4 border rounded-lg text-center">
                   <p className="text-sm text-muted-foreground mb-4">
-                    Escanea este código QR con WhatsApp
+                    Escaneie este código QR com o WhatsApp
                   </p>
                   <img
                     src={`data:image/png;base64,${qrCode}`}
