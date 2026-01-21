@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import type { DeepSeekMessage, AgentContext, Service, WorkingHours } from '@/types';
 import { format, addDays, parse, isWithinInterval, setHours, setMinutes } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { ptBR } from 'date-fns/locale';
 
 const deepseek = new OpenAI({
   apiKey: process.env.DEEPSEEK_API_KEY,
@@ -9,55 +9,55 @@ const deepseek = new OpenAI({
 });
 
 function generateSystemPrompt(context: AgentContext): string {
-  const basePrompt = `Eres un asistente virtual de atención al cliente para "${context.businessName}". Tu función principal es ayudar a los clientes a agendar citas.
+  const basePrompt = `Você é um assistente virtual de atendimento ao cliente para "${context.businessName}". Sua função principal é ajudar os clientes a agendar consultas.
 
-INFORMACIÓN DEL NEGOCIO:
-- Nombre: ${context.businessName}
-- Duración base de citas: ${context.appointmentDuration} minutos
+INFORMAÇÕES DO NEGÓCIO:
+- Nome: ${context.businessName}
+- Duração base das consultas: ${context.appointmentDuration} minutos
 
-SERVICIOS DISPONIBLES:
-${context.services.map((s: Service) => `- ${s.name}${s.description ? `: ${s.description}` : ''}${s.duration ? ` (${s.duration} min)` : ''}${s.price ? ` - $${s.price}` : ''}`).join('\n')}
+SERVIÇOS DISPONÍVEIS:
+${context.services.map((s: Service) => `- ${s.name}${s.description ? `: ${s.description}` : ''}${s.duration ? ` (${s.duration} min)` : ''}${s.price ? ` - R$${s.price}` : ''}`).join('\n')}
 
-HORARIOS DE ATENCIÓN:
+HORÁRIOS DE ATENDIMENTO:
 ${formatWorkingHours(context.workingHours)}
 
-HORARIOS DISPONIBLES PARA AGENDAR:
-${context.availableSlots.length > 0 ? context.availableSlots.join('\n') : 'No hay horarios disponibles en este momento.'}
+HORÁRIOS DISPONÍVEIS PARA AGENDAR:
+${context.availableSlots.length > 0 ? context.availableSlots.join('\n') : 'Não há horários disponíveis no momento.'}
 
-INSTRUCCIONES:
-1. Saluda amablemente al cliente
-2. Pregunta qué servicio necesita
-3. Ofrece los horarios disponibles
-4. Confirma la cita con fecha, hora y servicio
-5. Solicita el nombre del cliente para confirmar
+INSTRUÇÕES:
+1. Cumprimente o cliente cordialmente
+2. Pergunte qual serviço ele precisa
+3. Ofereça os horários disponíveis
+4. Confirme o agendamento com data, hora e serviço
+5. Solicite o nome do cliente para confirmar
 
-FORMATO DE RESPUESTA PARA AGENDAR:
-Cuando el cliente confirme una cita, responde EXACTAMENTE con este formato JSON al final de tu mensaje:
-[APPOINTMENT_DATA]{"action":"schedule","date":"YYYY-MM-DD","time":"HH:mm","service":"nombre_servicio","client_name":"nombre_cliente"}[/APPOINTMENT_DATA]
+FORMATO DE RESPOSTA PARA AGENDAR:
+Quando o cliente confirmar um agendamento, responda EXATAMENTE com este formato JSON no final da sua mensagem:
+[APPOINTMENT_DATA]{"action":"schedule","date":"YYYY-MM-DD","time":"HH:mm","service":"nome_servico","client_name":"nome_cliente"}[/APPOINTMENT_DATA]
 
 FORMATO PARA CANCELAR:
 [APPOINTMENT_DATA]{"action":"cancel","date":"YYYY-MM-DD","time":"HH:mm"}[/APPOINTMENT_DATA]
 
-FORMATO PARA CONSULTAR DISPONIBILIDAD:
+FORMATO PARA CONSULTAR DISPONIBILIDADE:
 [APPOINTMENT_DATA]{"action":"check_availability","date":"YYYY-MM-DD"}[/APPOINTMENT_DATA]
 
-Mantén un tono profesional pero amigable. Responde siempre en español.`;
+Mantenha um tom profissional mas amigável. Responda sempre em português do Brasil.`;
 
   // Append custom prompt if exists
   if (context.customPrompt) {
     return `${basePrompt}
 
-INSTRUCCIONES ADICIONALES DEL NEGOCIO:
+INSTRUÇÕES ADICIONAIS DO NEGÓCIO:
 ${context.customPrompt}
 
-IMPORTANTE: Las instrucciones adicionales complementan pero NO reemplazan las funciones principales de agendamiento. Siempre mantén la capacidad de agendar, cancelar y consultar citas.`;
+IMPORTANTE: As instruções adicionais complementam mas NÃO substituem as funções principais de agendamento. Sempre mantenha a capacidade de agendar, cancelar e consultar agendamentos.`;
   }
 
   return basePrompt;
 }
 
 function formatWorkingHours(hours: WorkingHours[]): string {
-  const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  const days = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
   return hours
     .filter((h) => h.is_active)
     .map((h) => `- ${days[h.day_of_week]}: ${h.start_time} - ${h.end_time}`)
@@ -80,7 +80,7 @@ export async function generateAgentResponse(
     max_tokens: 1000,
   });
 
-  return response.choices[0]?.message?.content || 'Lo siento, no pude procesar tu mensaje.';
+  return response.choices[0]?.message?.content || 'Desculpe, não consegui processar sua mensagem.';
 }
 
 export function parseAppointmentData(response: string): {
@@ -145,7 +145,7 @@ export function generateAvailableSlots(
 
         if (!hasConflict) {
           slots.push(
-            `${format(date, "EEEE d 'de' MMMM", { locale: es })} a las ${format(currentTime, 'HH:mm')}`
+            `${format(date, "EEEE, d 'de' MMMM", { locale: ptBR })} às ${format(currentTime, 'HH:mm')}`
           );
         }
       }
