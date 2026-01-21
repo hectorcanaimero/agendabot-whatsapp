@@ -14,7 +14,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { format } from "date-fns";
-import { es } from "date-fns/locale";
+import { ptBR } from "date-fns/locale";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -36,17 +36,17 @@ export default async function DashboardPage() {
     return (
       <div className="max-w-2xl mx-auto animate-fade-in">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">¡Bienvenido a AgendaBot!</h1>
+          <h1 className="text-3xl font-bold mb-2">Bem-vindo ao AgendaBot!</h1>
           <p className="text-muted-foreground">
-            Configura tu negocio para comenzar a recibir citas automáticamente
+            Configure seu negócio para começar a receber agendamentos automaticamente
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Configuración inicial</CardTitle>
+            <CardTitle>Configuração inicial</CardTitle>
             <CardDescription>
-              Completa estos pasos para activar tu agente de WhatsApp
+              Complete estes passos para ativar seu agente de WhatsApp
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -55,9 +55,9 @@ export default async function DashboardPage() {
                 1
               </div>
               <div className="flex-1">
-                <h3 className="font-medium">Configura tu negocio</h3>
+                <h3 className="font-medium">Configure seu negócio</h3>
                 <p className="text-sm text-muted-foreground">
-                  Nombre, horarios de atención y duración de citas
+                  Nome, horários de atendimento e duração das consultas
                 </p>
               </div>
               <Button asChild>
@@ -73,9 +73,9 @@ export default async function DashboardPage() {
                 2
               </div>
               <div className="flex-1">
-                <h3 className="font-medium">Conecta WhatsApp</h3>
+                <h3 className="font-medium">Conecte o WhatsApp</h3>
                 <p className="text-sm text-muted-foreground">
-                  Vincula tu número con Evolution API
+                  Vincule seu número com a Evolution API
                 </p>
               </div>
             </div>
@@ -85,9 +85,9 @@ export default async function DashboardPage() {
                 3
               </div>
               <div className="flex-1">
-                <h3 className="font-medium">Conecta Google Calendar</h3>
+                <h3 className="font-medium">Conecte o Google Calendar</h3>
                 <p className="text-sm text-muted-foreground">
-                  Sincroniza tus citas automáticamente
+                  Sincronize seus agendamentos automaticamente
                 </p>
               </div>
             </div>
@@ -97,9 +97,9 @@ export default async function DashboardPage() {
                 4
               </div>
               <div className="flex-1">
-                <h3 className="font-medium">Personaliza tu agente</h3>
+                <h3 className="font-medium">Personalize seu agente</h3>
                 <p className="text-sm text-muted-foreground">
-                  Configura el prompt y servicios
+                  Configure o prompt e serviços
                 </p>
               </div>
             </div>
@@ -152,9 +152,9 @@ export default async function DashboardPage() {
     <div className="space-y-8 animate-fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <h1 className="text-2xl font-bold">Painel</h1>
         <p className="text-muted-foreground">
-          Resumen de tu negocio: {business.name}
+          Resumo do seu negócio: {business.name}
         </p>
       </div>
 
@@ -163,14 +163,14 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Conversaciones
+              Conversas
             </CardTitle>
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalConversations || 0}</div>
             <p className="text-xs text-muted-foreground">
-              Total de conversaciones
+              Total de conversas
             </p>
           </CardContent>
         </Card>
@@ -178,14 +178,14 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Citas Hoy
+              Agendamentos Hoje
             </CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{todayAppointments || 0}</div>
             <p className="text-xs text-muted-foreground">
-              Citas programadas para hoy
+              Agendamentos para hoje
             </p>
           </CardContent>
         </Card>
@@ -193,14 +193,14 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Citas Pendientes
+              Agendamentos Pendentes
             </CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalAppointments || 0}</div>
             <p className="text-xs text-muted-foreground">
-              Citas por atender
+              Agendamentos a atender
             </p>
           </CardContent>
         </Card>
@@ -208,14 +208,14 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Duración Cita
+              Duração Consulta
             </CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{business.appointment_duration} min</div>
             <p className="text-xs text-muted-foreground">
-              Tiempo por consulta
+              Tempo por consulta
             </p>
           </CardContent>
         </Card>
@@ -227,12 +227,12 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle>Próximas Citas</CardTitle>
-              <CardDescription>Citas programadas</CardDescription>
+              <CardTitle>Próximos Agendamentos</CardTitle>
+              <CardDescription>Agendamentos programados</CardDescription>
             </div>
             <Button variant="ghost" size="sm" asChild>
               <Link href="/appointments">
-                Ver todas
+                Ver todos
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -261,7 +261,7 @@ export default async function DashboardPage() {
                         {format(new Date(apt.start_time), "HH:mm")}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {format(new Date(apt.start_time), "d MMM", { locale: es })}
+                        {format(new Date(apt.start_time), "d MMM", { locale: ptBR })}
                       </p>
                     </div>
                   </div>
@@ -270,7 +270,7 @@ export default async function DashboardPage() {
             ) : (
               <div className="text-center py-8 text-muted-foreground">
                 <Calendar className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>No hay citas próximas</p>
+                <p>Não há agendamentos próximos</p>
               </div>
             )}
           </CardContent>
@@ -280,8 +280,8 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle>Conversaciones Recientes</CardTitle>
-              <CardDescription>Últimas interacciones</CardDescription>
+              <CardTitle>Conversas Recentes</CardTitle>
+              <CardDescription>Últimas interações</CardDescription>
             </div>
             <Button variant="ghost" size="sm" asChild>
               <Link href="/conversations">
@@ -317,7 +317,7 @@ export default async function DashboardPage() {
                             : "bg-muted text-muted-foreground"
                         }`}
                       >
-                        {conv.status === "active" ? "Activa" : "Cerrada"}
+                        {conv.status === "active" ? "Ativa" : "Fechada"}
                       </span>
                     </div>
                   </div>
@@ -326,7 +326,7 @@ export default async function DashboardPage() {
             ) : (
               <div className="text-center py-8 text-muted-foreground">
                 <MessageSquare className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>No hay conversaciones aún</p>
+                <p>Não há conversas ainda</p>
               </div>
             )}
           </CardContent>
