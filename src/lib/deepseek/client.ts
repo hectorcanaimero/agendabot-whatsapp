@@ -297,9 +297,10 @@ export async function generateAgentResponse(
     currentMessages.push(choice.message as any);
     
     for (const toolCall of choice.message.tool_calls) {
+      const tc = toolCall as any;
       const toolResult = await executeTool(
-        toolCall.function.name,
-        JSON.parse(toolCall.function.arguments),
+        tc.function.name,
+        JSON.parse(tc.function.arguments),
         context
       );
       

@@ -145,8 +145,6 @@ export default function SettingsPage() {
 
         if (instanceData) {
           setWhatsappInstance(instanceData);
-          setEvolutionApiUrl(instanceData.api_url);
-          setEvolutionApiKey(instanceData.api_key);
           setInstanceName(instanceData.instance_name);
         }
 

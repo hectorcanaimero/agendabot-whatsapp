@@ -47,20 +47,21 @@ export async function POST(request: NextRequest) {
 
     // Create Evolution client and get QR code
     const evolutionClient = createEvolutionClient(instanceName);
-    const qrData = await evolutionClient.getQRCode();
+    const qrData = await evolutionClient.getQRCode() as any;
 
     // Update instance with QR code
     await supabase
       .from('whatsapp_instances')
       .update({
-        qr_code: qrData.qrcode?.base64 || qrData.base64,
+        qr_code: qrData.qrcode?.base64 || qrData.base64 || '',
         status: 'connecting',
       })
       .eq('id', instance.id);
 
     return NextResponse.json({
       success: true,
-      qrCode: qrData.qrcode?.base64 || qrData.base64,
+      qrCode: qrData.qrcode?.base64 || qrData.base64 || '',
+      instance: qrData.instance,
     });
   } catch (error: any) {
     console.error('Error connecting WhatsApp:', error);
