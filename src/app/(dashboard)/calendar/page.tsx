@@ -23,7 +23,7 @@ import {
   addMonths,
   subMonths,
 } from "date-fns";
-import { es } from "date-fns/locale";
+import { ptBR } from "date-fns/locale";
 
 interface Appointment {
   id: string;
@@ -105,9 +105,9 @@ export default function CalendarPage() {
   return (
     <div className="space-y-6 animate-fade-in pb-20 lg:pb-6">
       <div>
-        <h1 className="text-2xl font-bold">Calendario</h1>
+        <h1 className="text-2xl font-bold">Calendário</h1>
         <p className="text-muted-foreground">
-          Vista de calendario de todas tus citas
+          Vista de calendário de todos os seus agendamentos
         </p>
       </div>
 
@@ -116,7 +116,7 @@ export default function CalendarPage() {
         <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle>
-              {format(currentMonth, "MMMM yyyy", { locale: es })}
+              {format(currentMonth, "MMMM yyyy", { locale: ptBR })}
             </CardTitle>
             <div className="flex items-center gap-2">
               <Button
@@ -134,7 +134,7 @@ export default function CalendarPage() {
                   setSelectedDate(new Date());
                 }}
               >
-                Hoy
+                Hoje
               </Button>
               <Button
                 variant="outline"
@@ -184,7 +184,7 @@ export default function CalendarPage() {
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">
-              {format(selectedDate, "EEEE d 'de' MMMM", { locale: es })}
+              {format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR })}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -221,12 +221,12 @@ export default function CalendarPage() {
                               className="text-xs"
                             >
                               {apt.status === "scheduled"
-                                ? "Programada"
+                                ? "Agendado"
                                 : apt.status === "confirmed"
-                                ? "Confirmada"
+                                ? "Confirmado"
                                 : apt.status === "cancelled"
-                                ? "Cancelada"
-                                : "Completada"}
+                                ? "Cancelado"
+                                : "Concluído"}
                             </Badge>
                           </div>
                           <p className="text-sm font-medium flex items-center gap-1">
@@ -247,7 +247,7 @@ export default function CalendarPage() {
             ) : (
               <div className="text-center py-12 text-muted-foreground">
                 <Clock className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>No hay citas para este día</p>
+                <p>Não há agendamentos para este dia</p>
               </div>
             )}
           </CardContent>
@@ -260,19 +260,19 @@ export default function CalendarPage() {
           <div className="flex flex-wrap gap-4 justify-center">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-blue-500" />
-              <span className="text-sm">Programada</span>
+              <span className="text-sm">Agendado</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-green-500" />
-              <span className="text-sm">Confirmada</span>
+              <span className="text-sm">Confirmado</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-red-500" />
-              <span className="text-sm">Cancelada</span>
+              <span className="text-sm">Cancelado</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-gray-500" />
-              <span className="text-sm">Completada</span>
+              <span className="text-sm">Concluído</span>
             </div>
           </div>
         </CardContent>
