@@ -27,7 +27,7 @@ export function DashboardHeader({ user }: HeaderProps) {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    toast.success("Sesión cerrada");
+    toast.success("Sessão encerrada");
     router.push("/login");
     router.refresh();
   };
@@ -60,19 +60,19 @@ export function DashboardHeader({ user }: HeaderProps) {
           </div>
           <nav className="flex flex-col gap-1 p-4">
             <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted">
-              Dashboard
+              Painel
             </Link>
             <Link href="/conversations" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted">
-              Conversaciones
+              Conversas
             </Link>
             <Link href="/appointments" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted">
-              Citas
+              Agendamentos
             </Link>
             <Link href="/calendar" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted">
-              Calendario
+              Calendário
             </Link>
             <Link href="/settings" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted">
-              Configuración
+              Configurações
             </Link>
           </nav>
         </SheetContent>
@@ -109,7 +109,7 @@ export function DashboardHeader({ user }: HeaderProps) {
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">
-                    {user?.full_name || "Usuario"}
+                    {user?.full_name || "Usuário"}
                   </p>
                   <p className="text-xs leading-none text-muted-foreground">
                     {user?.email}
@@ -125,8 +125,7 @@ export function DashboardHeader({ user }: HeaderProps) {
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/settings" className="cursor-pointer">
-                  <Settings className="mr-2 h-4 w-4" />
-                  Configuración
+                  <Settings className="mr-2 h-4 w-4"                  Configuraçõesções
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -135,7 +134,7 @@ export function DashboardHeader({ user }: HeaderProps) {
                 className="cursor-pointer text-destructive focus:text-destructive"
               >
                 <LogOut className="mr-2 h-4 w-4" />
-                Cerrar sesión
+                Sair
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

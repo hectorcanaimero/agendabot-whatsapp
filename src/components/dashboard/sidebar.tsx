@@ -20,11 +20,11 @@ interface SidebarProps {
 }
 
 const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Conversaciones", href: "/conversations", icon: MessageSquare },
-  { name: "Citas", href: "/appointments", icon: Calendar },
-  { name: "Calendario", href: "/calendar", icon: Clock },
-  { name: "Configuración", href: "/settings", icon: Settings },
+  { name: "Painel", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Conversas", href: "/conversations", icon: MessageSquare },
+  { name: "Agendamentos", href: "/appointments", icon: Calendar },
+  { name: "Calendário", href: "/calendar", icon: Clock },
+  { name: "Configurações", href: "/settings", icon: Settings },
 ];
 
 export function DashboardSidebar({ user, business }: SidebarProps) {
@@ -48,7 +48,7 @@ export function DashboardSidebar({ user, business }: SidebarProps) {
             <div className="px-3 py-2 bg-muted rounded-lg">
               <p className="text-sm font-medium truncate">{business.name}</p>
               <p className="text-xs text-muted-foreground">
-                {business.appointment_duration} min por cita
+                {business.appointment_duration} min por consulta
               </p>
             </div>
           )}
@@ -84,7 +84,7 @@ export function DashboardSidebar({ user, business }: SidebarProps) {
               <li className="mt-auto">
                 <div className="rounded-lg border border-border p-4">
                   <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
-                    Estado del Sistema
+                    Status do Sistema
                   </h3>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">

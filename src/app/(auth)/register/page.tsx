@@ -39,10 +39,10 @@ export default function RegisterPage() {
         return;
       }
 
-      toast.success("Cuenta creada exitosamente. Revisa tu correo para confirmar.");
+      toast.success("Conta criada com sucesso. Verifique seu e-mail para confirmar.");
       router.push("/login");
     } catch (error) {
-      toast.error("Error al crear la cuenta");
+      toast.error("Erro ao criar conta");
     } finally {
       setLoading(false);
     }
@@ -59,25 +59,25 @@ export default function RegisterPage() {
             <span className="text-2xl font-semibold">AgendaBot</span>
           </div>
           <p className="text-muted-foreground text-sm">
-            Automatiza tu atención al cliente
+            Automatize seu atendimento ao cliente
           </p>
         </div>
 
         <Card className="border-border/50">
           <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-xl">Crear cuenta</CardTitle>
+            <CardTitle className="text-xl">Criar conta</CardTitle>
             <CardDescription>
-              Completa los datos para registrarte
+              Preencha os dados para se cadastrar
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleRegister} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="fullName">Nombre completo</Label>
+                <Label htmlFor="fullName">Nome completo</Label>
                 <Input
                   id="fullName"
                   type="text"
-                  placeholder="Tu nombre"
+                  placeholder="Seu nome"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
@@ -85,11 +85,11 @@ export default function RegisterPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Correo electrónico</Label>
+                <Label htmlFor="email">E-mail</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="tu@email.com"
+                  placeholder="seu@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -97,7 +97,7 @@ export default function RegisterPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Contraseña</Label>
+                <Label htmlFor="password">Senha</Label>
                 <Input
                   id="password"
                   type="password"
@@ -120,30 +120,30 @@ export default function RegisterPage() {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creando cuenta...
+                    Criando conta...
                   </>
                 ) : (
-                  "Crear cuenta"
+                  "Criar conta"
                 )}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">
-                ¿Ya tienes una cuenta?{" "}
+                Já tem uma conta?{" "}
               </span>
               <Link
                 href="/login"
                 className="text-foreground font-medium hover:underline"
               >
-                Inicia sesión
+                Entrar
               </Link>
             </div>
           </CardContent>
         </Card>
 
         <p className="text-center text-xs text-muted-foreground mt-6">
-          Al continuar, aceptas nuestros términos de servicio y política de privacidad.
+          Ao continuar, você aceita nossos termos de serviço e política de privacidade.
         </p>
       </div>
     </div>

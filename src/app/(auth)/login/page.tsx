@@ -33,11 +33,11 @@ export default function LoginPage() {
         return;
       }
 
-      toast.success("Inicio de sesión exitoso");
+      toast.success("Login realizado com sucesso");
       router.push("/dashboard");
       router.refresh();
     } catch (error) {
-      toast.error("Error al iniciar sesión");
+      toast.error("Erro ao fazer login");
     } finally {
       setLoading(false);
     }
@@ -54,25 +54,25 @@ export default function LoginPage() {
             <span className="text-2xl font-semibold">AgendaBot</span>
           </div>
           <p className="text-muted-foreground text-sm">
-            Automatiza tu atención al cliente
+            Automatize seu atendimento ao cliente
           </p>
         </div>
 
         <Card className="border-border/50">
           <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-xl">Iniciar sesión</CardTitle>
+            <CardTitle className="text-xl">Entrar</CardTitle>
             <CardDescription>
-              Ingresa tus credenciales para acceder a tu cuenta
+              Digite suas credenciais para acessar sua conta
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Correo electrónico</Label>
+                <Label htmlFor="email">E-mail</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="tu@email.com"
+                  placeholder="seu@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -80,7 +80,7 @@ export default function LoginPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Contraseña</Label>
+                <Label htmlFor="password">Senha</Label>
                 <Input
                   id="password"
                   type="password"
@@ -99,30 +99,30 @@ export default function LoginPage() {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Iniciando sesión...
+                    Entrando...
                   </>
                 ) : (
-                  "Iniciar sesión"
+                  "Entrar"
                 )}
               </Button>
             </form>
 
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">
-                ¿No tienes una cuenta?{" "}
+                Não tem uma conta?{" "}
               </span>
               <Link
                 href="/register"
                 className="text-foreground font-medium hover:underline"
               >
-                Regístrate
+                Cadastre-se
               </Link>
             </div>
           </CardContent>
         </Card>
 
         <p className="text-center text-xs text-muted-foreground mt-6">
-          Al continuar, aceptas nuestros términos de servicio y política de privacidad.
+          Ao continuar, você aceita nossos termos de serviço e política de privacidade.
         </p>
       </div>
     </div>

@@ -25,10 +25,10 @@ export default function HomePage() {
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" asChild>
-              <Link href="/login">Iniciar sesión</Link>
+              <Link href="/login">Entrar</Link>
             </Button>
             <Button asChild>
-              <Link href="/register">Comenzar gratis</Link>
+              <Link href="/register">Começar grátis</Link>
             </Button>
           </div>
         </div>
@@ -39,20 +39,20 @@ export default function HomePage() {
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-sm mb-6">
             <Zap className="w-4 h-4" />
-            Automatiza tu atención al cliente
+            Automatize seu atendimento ao cliente
           </div>
           <h1 className="text-4xl lg:text-6xl font-bold tracking-tight mb-6 max-w-4xl mx-auto">
             Agente de WhatsApp para{" "}
-            <span className="text-primary">agendamiento automático</span>
+            <span className="text-primary">agendamento automático</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Deja que la IA atienda a tus clientes 24/7, agende citas y sincronice
-            todo con tu Google Calendar. Sin intervención manual.
+            Deixe a IA atender seus clientes 24/7, agendar consultas e sincronizar
+            tudo com seu Google Calendar. Sem intervenção manual.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" asChild>
               <Link href="/register">
-                Comenzar gratis
+                Começar grátis
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -68,11 +68,11 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4">
-              Todo lo que necesitas para automatizar tu agenda
+              Tudo que você precisa para automatizar sua agenda
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Una solución completa que integra WhatsApp, IA y Google Calendar
-              para gestionar tus citas sin esfuerzo.
+              Uma solução completa que integra WhatsApp, IA e Google Calendar
+              para gerenciar seus agendamentos sem esforço.
             </p>
           </div>
 
@@ -82,11 +82,11 @@ export default function HomePage() {
                 <MessageSquare className="w-6 h-6 text-green-500" />
               </div>
               <h3 className="text-lg font-semibold mb-2">
-                Integración con WhatsApp
+                Integração com WhatsApp
               </h3>
               <p className="text-muted-foreground">
-                Conecta tu número de WhatsApp Business y atiende a tus clientes
-                automáticamente a través de Evolution API.
+                Conecte seu número do WhatsApp Business e atenda seus clientes
+                automaticamente através da Evolution API.
               </p>
             </div>
 
@@ -95,11 +95,11 @@ export default function HomePage() {
                 <Bot className="w-6 h-6 text-blue-500" />
               </div>
               <h3 className="text-lg font-semibold mb-2">
-                Agente con IA (DeepSeek)
+                Agente com IA (DeepSeek)
               </h3>
               <p className="text-muted-foreground">
-                Un agente inteligente que entiende las necesidades de tus
-                clientes y gestiona el agendamiento de forma natural.
+                Um agente inteligente que entende as necessidades dos seus
+                clientes e gerencia o agendamento de forma natural.
               </p>
             </div>
 
@@ -108,11 +108,11 @@ export default function HomePage() {
                 <Calendar className="w-6 h-6 text-red-500" />
               </div>
               <h3 className="text-lg font-semibold mb-2">
-                Sincronización con Google Calendar
+                Sincronização com Google Calendar
               </h3>
               <p className="text-muted-foreground">
-                Las citas se crean automáticamente en tu calendario de Google,
-                evitando conflictos y doble agendamiento.
+                As consultas são criadas automaticamente no seu calendário do Google,
+                evitando conflitos e agendamento duplo.
               </p>
             </div>
 
@@ -121,11 +121,11 @@ export default function HomePage() {
                 <Clock className="w-6 h-6 text-purple-500" />
               </div>
               <h3 className="text-lg font-semibold mb-2">
-                Horarios personalizables
+                Horários personalizáveis
               </h3>
               <p className="text-muted-foreground">
-                Define tus días y horarios de atención, duración de citas y
-                servicios disponibles.
+                Defina seus dias e horários de atendimento, duração das consultas e
+                serviços disponíveis.
               </p>
             </div>
 
@@ -134,11 +134,11 @@ export default function HomePage() {
                 <Zap className="w-6 h-6 text-orange-500" />
               </div>
               <h3 className="text-lg font-semibold mb-2">
-                Prompt personalizable
+                Prompt personalizável
               </h3>
               <p className="text-muted-foreground">
-                Personaliza cómo responde tu agente sin perder la funcionalidad
-                de agendamiento. Añade tu toque personal.
+                Personalize como seu agente responde sem perder a funcionalidade
+                de agendamento. Adicione seu toque pessoal.
               </p>
             </div>
 
@@ -150,8 +150,8 @@ export default function HomePage() {
                 Dashboard completo
               </h3>
               <p className="text-muted-foreground">
-                Visualiza conversaciones, citas y estadísticas en un panel
-                moderno y fácil de usar.
+                Visualize conversas, agendamentos e estatísticas em um painel
+                moderno e fácil de usar.
               </p>
             </div>
           </div>
@@ -162,9 +162,9 @@ export default function HomePage() {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Cómo funciona</h2>
+            <h2 className="text-3xl font-bold mb-4">Como funciona</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              En solo 4 pasos tendrás tu agente de WhatsApp funcionando
+              Em apenas 4 passos você terá seu agente de WhatsApp funcionando
             </p>
           </div>
 
@@ -172,27 +172,27 @@ export default function HomePage() {
             {[
               {
                 step: 1,
-                title: "Configura tu negocio",
+                title: "Configure seu negócio",
                 description:
-                  "Define el nombre de tu negocio, horarios de atención y duración de las citas.",
+                  "Defina o nome do seu negócio, horários de atendimento e duração das consultas.",
               },
               {
                 step: 2,
-                title: "Conecta WhatsApp",
+                title: "Conecte o WhatsApp",
                 description:
-                  "Vincula tu número de WhatsApp escaneando un código QR con Evolution API.",
+                  "Vincule seu número do WhatsApp escaneando um código QR com a Evolution API.",
               },
               {
                 step: 3,
-                title: "Conecta Google Calendar",
+                title: "Conecte o Google Calendar",
                 description:
-                  "Autoriza el acceso a tu calendario para sincronizar las citas automáticamente.",
+                  "Autorize o acesso ao seu calendário para sincronizar os agendamentos automaticamente.",
               },
               {
                 step: 4,
-                title: "Personaliza tu agente",
+                title: "Personalize seu agente",
                 description:
-                  "Añade servicios, ajusta el prompt y deja que el agente atienda a tus clientes.",
+                  "Adicione serviços, ajuste o prompt e deixe o agente atender seus clientes.",
               },
             ].map((item) => (
               <div key={item.step} className="flex gap-6 items-start">
@@ -213,15 +213,15 @@ export default function HomePage() {
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">
-            Comienza a automatizar tu agenda hoy
+            Comece a automatizar sua agenda hoje
           </h2>
           <p className="text-primary-foreground/80 mb-8 max-w-xl mx-auto">
-            Únete a los negocios que ya están ahorrando tiempo y mejorando la
-            experiencia de sus clientes.
+            Junte-se aos negócios que já estão economizando tempo e melhorando a
+            experiência dos seus clientes.
           </p>
           <Button size="lg" variant="secondary" asChild>
             <Link href="/register">
-              Crear cuenta gratis
+              Criar conta grátis
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
@@ -239,7 +239,7 @@ export default function HomePage() {
               <span className="font-semibold">AgendaBot</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              © 2025 AgendaBot. Todos los derechos reservados.
+              © 2025 AgendaBot. Todos os direitos reservados.
             </p>
           </div>
         </div>
