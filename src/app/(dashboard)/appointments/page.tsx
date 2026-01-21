@@ -14,26 +14,26 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { format } from "date-fns";
-import { es } from "date-fns/locale";
+import { ptBR } from "date-fns/locale";
 
 const statusConfig = {
   scheduled: {
-    label: "Programada",
+    label: "Agendado",
     variant: "default" as const,
     icon: Clock,
   },
   confirmed: {
-    label: "Confirmada",
+    label: "Confirmado",
     variant: "default" as const,
     icon: CheckCircle2,
   },
   cancelled: {
-    label: "Cancelada",
+    label: "Cancelado",
     variant: "destructive" as const,
     icon: XCircle,
   },
   completed: {
-    label: "Completada",
+    label: "Concluído",
     variant: "secondary" as const,
     icon: CheckCircle2,
   },
@@ -87,7 +87,7 @@ export default async function AppointmentsPage() {
     .eq("business_id", business.id)
     .gte("start_time", today.toISOString())
     .lt("start_time", tomorrow.toISOString())
-    .order("start_time", { ascending: true });
+    .order("start_time", { ascending: true});
 
   const AppointmentCard = ({ appointment }: { appointment: any }) => {
     const status = statusConfig[appointment.status as keyof typeof statusConfig];
@@ -119,7 +119,7 @@ export default async function AppointmentsPage() {
           <div className="flex items-center gap-2 justify-end mb-1">
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm">
-              {format(new Date(appointment.start_time), "d MMM yyyy", { locale: es })}
+              {format(new Date(appointment.start_time), "d MMM yyyy", { locale: ptBR })}
             </span>
           </div>
           <div className="flex items-center gap-2 justify-end mb-2">
@@ -141,9 +141,9 @@ export default async function AppointmentsPage() {
   return (
     <div className="space-y-6 animate-fade-in pb-20 lg:pb-6">
       <div>
-        <h1 className="text-2xl font-bold">Citas</h1>
+        <h1 className="text-2xl font-bold">Agendamentos</h1>
         <p className="text-muted-foreground">
-          Gestiona todas las citas de tu negocio
+          Gerencie todos os agendamentos do seu negócio
         </p>
       </div>
 
@@ -152,7 +152,7 @@ export default async function AppointmentsPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Citas Hoy
+              Agendamentos Hoje
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -164,7 +164,7 @@ export default async function AppointmentsPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Próximas
+              Próximos
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -176,7 +176,7 @@ export default async function AppointmentsPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Completadas
+              Concluídos
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -189,17 +189,17 @@ export default async function AppointmentsPage() {
 
       <Tabs defaultValue="upcoming" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="today">Hoy</TabsTrigger>
-          <TabsTrigger value="upcoming">Próximas</TabsTrigger>
-          <TabsTrigger value="past">Historial</TabsTrigger>
+          <TabsTrigger value="today">Hoje</TabsTrigger>
+          <TabsTrigger value="upcoming">Próximos</TabsTrigger>
+          <TabsTrigger value="past">Histórico</TabsTrigger>
         </TabsList>
 
         <TabsContent value="today">
           <Card>
             <CardHeader>
-              <CardTitle>Citas de Hoy</CardTitle>
+              <CardTitle>Agendamentos de Hoje</CardTitle>
               <CardDescription>
-                {format(new Date(), "EEEE d 'de' MMMM", { locale: es })}
+                {format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -212,7 +212,7 @@ export default async function AppointmentsPage() {
               ) : (
                 <div className="text-center py-12 text-muted-foreground">
                   <Calendar className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>No hay citas programadas para hoy</p>
+                  <p>Não há agendamentos para hoje</p>
                 </div>
               )}
             </CardContent>
@@ -222,9 +222,9 @@ export default async function AppointmentsPage() {
         <TabsContent value="upcoming">
           <Card>
             <CardHeader>
-              <CardTitle>Próximas Citas</CardTitle>
+              <CardTitle>Próximos Agendamentos</CardTitle>
               <CardDescription>
-                Citas programadas y confirmadas
+                Agendamentos programados e confirmados
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -237,7 +237,7 @@ export default async function AppointmentsPage() {
               ) : (
                 <div className="text-center py-12 text-muted-foreground">
                   <Calendar className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>No hay citas próximas</p>
+                  <p>Não há agendamentos próximos</p>
                 </div>
               )}
             </CardContent>
@@ -247,9 +247,9 @@ export default async function AppointmentsPage() {
         <TabsContent value="past">
           <Card>
             <CardHeader>
-              <CardTitle>Historial de Citas</CardTitle>
+              <CardTitle>Histórico de Agendamentos</CardTitle>
               <CardDescription>
-                Citas completadas y canceladas
+                Agendamentos concluídos e cancelados
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -262,7 +262,7 @@ export default async function AppointmentsPage() {
               ) : (
                 <div className="text-center py-12 text-muted-foreground">
                   <Calendar className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>No hay historial de citas</p>
+                  <p>Não há histórico de agendamentos</p>
                 </div>
               )}
             </CardContent>
