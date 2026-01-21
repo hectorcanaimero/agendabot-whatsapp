@@ -72,8 +72,6 @@ export default function SettingsPage() {
 
   // WhatsApp state
   const [whatsappInstance, setWhatsappInstance] = useState<any>(null);
-  const [evolutionApiUrl, setEvolutionApiUrl] = useState("");
-  const [evolutionApiKey, setEvolutionApiKey] = useState("");
   const [instanceName, setInstanceName] = useState("");
   const [qrCode, setQrCode] = useState("");
   const [connectingWhatsApp, setConnectingWhatsApp] = useState(false);
@@ -294,8 +292,6 @@ export default function SettingsPage() {
         await supabase
           .from("whatsapp_instances")
           .update({
-            api_url: evolutionApiUrl,
-            api_key: evolutionApiKey,
             instance_name: instanceName,
           })
           .eq("id", whatsappInstance.id);
@@ -304,8 +300,6 @@ export default function SettingsPage() {
           .from("whatsapp_instances")
           .insert({
             business_id: business.id,
-            api_url: evolutionApiUrl,
-            api_key: evolutionApiKey,
             instance_name: instanceName,
             status: "disconnected",
           })
@@ -325,8 +319,8 @@ export default function SettingsPage() {
   };
 
   const connectWhatsApp = async () => {
-    if (!evolutionApiUrl || !evolutionApiKey || !instanceName) {
-      toast.error("Completa todos los campos de WhatsApp");
+    if (!instanceName) {
+      toast.error("Ingresa el nombre de la instancia");
       return;
     }
 
@@ -336,11 +330,12 @@ export default function SettingsPage() {
       await saveWhatsAppConfig();
 
       // Get QR code from Evolution API
-      const response = await fetch(`${evolutionApiUrl}/instance/connect/${instanceName}`, {
-        method: "GET",
+      const response = await fetch(`/api/whatsapp/connect`, {
+        method: "POST",
         headers: {
-          apikey: evolutionApiKey,
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({ instanceName }),
       });
 
       if (!response.ok) {
@@ -705,26 +700,8 @@ export default function SettingsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="evolutionApiUrl">URL de Evolution API</Label>
-                  <Input
-                    id="evolutionApiUrl"
-                    value={evolutionApiUrl}
-                    onChange={(e) => setEvolutionApiUrl(e.target.value)}
-                    placeholder="https://tu-evolution-api.com"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="evolutionApiKey">API Key</Label>
-                  <Input
-                    id="evolutionApiKey"
-                    type="password"
-                    value={evolutionApiKey}
-                    onChange={(e) => setEvolutionApiKey(e.target.value)}
-                    placeholder="Tu API Key"
-                  />
-                </div>
+              <div className="p-3 bg-muted rounded-lg text-sm text-muted-foreground mb-4">
+                <p>Las credenciales de Evolution API están configuradas globalmente por el administrador del sistema.</p>
               </div>
 
               <div className="space-y-2">

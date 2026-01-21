@@ -122,10 +122,13 @@ export class EvolutionClient {
   }
 }
 
-export function createEvolutionClient(
-  apiUrl: string,
-  apiKey: string,
-  instanceName: string
-) {
+export function createEvolutionClient(instanceName: string) {
+  const apiUrl = process.env.EVOLUTION_API_URL;
+  const apiKey = process.env.EVOLUTION_API_TOKEN;
+
+  if (!apiUrl || !apiKey) {
+    throw new Error('Evolution API credentials not configured in environment variables');
+  }
+
   return new EvolutionClient(apiUrl, apiKey, instanceName);
 }

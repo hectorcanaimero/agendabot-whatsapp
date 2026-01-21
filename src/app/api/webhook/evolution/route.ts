@@ -258,11 +258,7 @@ export async function POST(request: NextRequest) {
       .eq('id', conversation.id);
 
     // Send response via Evolution API
-    const evolutionClient = createEvolutionClient(
-      instance.api_url,
-      instance.api_key,
-      instance.instance_name
-    );
+    const evolutionClient = createEvolutionClient(instance.instance_name);
 
     await evolutionClient.sendText({
       number: contactPhone,

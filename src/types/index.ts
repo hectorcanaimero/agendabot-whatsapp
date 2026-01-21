@@ -36,8 +36,6 @@ export interface WhatsAppInstance {
   business_id: string;
   instance_name: string;
   instance_id: string;
-  api_url: string;
-  api_key: string;
   status: 'connected' | 'disconnected' | 'connecting';
   qr_code?: string;
   phone_number?: string;

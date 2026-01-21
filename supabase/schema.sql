@@ -38,13 +38,12 @@ CREATE TABLE IF NOT EXISTS public.working_hours (
 );
 
 -- WhatsApp instances table
+-- Note: Evolution API credentials (URL and token) are now global environment variables
 CREATE TABLE IF NOT EXISTS public.whatsapp_instances (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   business_id UUID REFERENCES public.businesses(id) ON DELETE CASCADE NOT NULL,
   instance_name TEXT NOT NULL UNIQUE,
   instance_id TEXT,
-  api_url TEXT NOT NULL,
-  api_key TEXT NOT NULL,
   status TEXT DEFAULT 'disconnected' CHECK (status IN ('connected', 'disconnected', 'connecting')),
   qr_code TEXT,
   phone_number TEXT,
