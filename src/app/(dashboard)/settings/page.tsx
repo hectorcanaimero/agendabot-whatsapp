@@ -67,6 +67,7 @@ export default function SettingsPage() {
 
   // Agent config state
   const [agentName, setAgentName] = useState("Assistente");
+  const [agentMode, setAgentMode] = useState<"support" | "scheduling" | "hybrid">("scheduling");
   const [customPrompt, setCustomPrompt] = useState("");
   const [welcomeMessage, setWelcomeMessage] = useState("");
   const [services, setServices] = useState<Service[]>([]);
@@ -131,6 +132,7 @@ export default function SettingsPage() {
 
         if (agentData) {
           setAgentName(agentData.agent_name || "Assistente");
+          setAgentMode(agentData.agent_mode || "scheduling");
           setCustomPrompt(agentData.custom_prompt || "");
           setWelcomeMessage(agentData.welcome_message || "");
           setServices(agentData.services || []);
@@ -258,6 +260,7 @@ export default function SettingsPage() {
           .from("agent_configs")
           .update({
             agent_name: agentName,
+            agent_mode: agentMode,
             custom_prompt: customPrompt,
             welcome_message: welcomeMessage,
             services: services,
@@ -267,6 +270,7 @@ export default function SettingsPage() {
         await supabase.from("agent_configs").insert({
           business_id: business.id,
           agent_name: agentName,
+          agent_mode: agentMode,
           custom_prompt: customPrompt,
           welcome_message: welcomeMessage,
           services: services,
@@ -647,6 +651,25 @@ export default function SettingsPage() {
                 />
                 <p className="text-xs text-muted-foreground">
                   O nome que o agente usará para se apresentar aos clientes
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="agentMode">Modo de Operação</Label>
+                <select
+                  id="agentMode"
+                  value={agentMode}
+                  onChange={(e) => setAgentMode(e.target.value as any)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  <option value="scheduling">Apenas Agendamento</option>
+                  <option value="support">Apenas Atendimento (Base de Conhecimento)</option>
+                  <option value="hybrid">Híbrido (Atendimento + Agendamento)</option>
+                </select>
+                <p className="text-xs text-muted-foreground">
+                  {agentMode === "scheduling" && "O agente apenas agenda consultas e gerencia horários"}
+                  {agentMode === "support" && "O agente responde perguntas baseado nos documentos enviados"}
+                  {agentMode === "hybrid" && "O agente responde perguntas E agenda consultas"}
                 </p>
               </div>
 

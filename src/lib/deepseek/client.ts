@@ -3,6 +3,7 @@ import type { DeepSeekMessage, AgentContext, Service, WorkingHours } from '@/typ
 import { format, addDays, parse, parseISO, isWithinInterval, setHours, setMinutes, startOfDay, endOfDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { createClient } from '@/lib/supabase/server';
+import { searchDocuments, buildContextFromResults } from '@/lib/embeddings/search';
 
 const deepseek = new OpenAI({
   apiKey: process.env.DEEPSEEK_API_KEY,
@@ -83,9 +84,67 @@ const tools = [
   },
 ];
 
-function generateSystemPrompt(context: AgentContext): string {
+function generateSystemPrompt(
+  context: AgentContext,
+  agentMode: 'support' | 'scheduling' | 'hybrid' = 'scheduling',
+  knowledgeContext: string = ''
+): string {
   const agentName = context.agentName || 'Assistente';
   
+  // Support mode - only answer from knowledge base
+  if (agentMode === 'support') {
+    return `Você é ${agentName}, um assistente virtual de atendimento ao cliente para "${context.businessName}".
+
+Sua função é responder perguntas dos clientes com base na base de conhecimento fornecida.
+
+${knowledgeContext}
+
+INSTRUÇÕES:
+1. Responda apenas com base nas informações fornecidas acima
+2. Se não souber a resposta, seja honesto e sugira entrar em contato direto
+3. Seja claro, objetivo e profissional
+4. Cite a fonte quando relevante
+
+${context.customPrompt ? `INSTRUÇÕES ADICIONAIS:
+${context.customPrompt}
+
+` : ''}Responda sempre em português do Brasil.`;
+  }
+  
+  // Hybrid mode - both support and scheduling
+  if (agentMode === 'hybrid') {
+    return `Você é ${agentName}, um assistente virtual completo de atendimento ao cliente para "${context.businessName}".
+
+Você pode:
+1. Responder perguntas usando a base de conhecimento
+2. Agendar consultas e gerenciar horários
+
+${knowledgeContext ? `${knowledgeContext}
+
+` : ''}INFORMAÇÕES DO NEGÓCIO:
+- Nome: ${context.businessName}
+- Duração base das consultas: ${context.appointmentDuration} minutos
+
+SERVIÇOS DISPONÍVEIS:
+${context.services.map((s: Service) => `- ${s.name}${s.description ? `: ${s.description}` : ''}${s.duration ? ` (${s.duration} min)` : ''}${s.price ? ` - R$${s.price}` : ''}`).join('\n')}
+
+HORÁRIOS DE ATENDIMENTO:
+${formatWorkingHours(context.workingHours)}
+
+INSTRUÇÕES:
+1. Se o cliente fizer uma pergunta, use a base de conhecimento para responder
+2. Se o cliente quiser agendar, use as ferramentas de agendamento
+3. Seja proativo - ofereça ajuda para agendar após responder perguntas
+4. Use check_availability quando o cliente mencionar datas
+5. Confirme todos os detalhes antes de criar agendamento
+
+${context.customPrompt ? `INSTRUÇÕES ADICIONAIS:
+${context.customPrompt}
+
+` : ''}Responda sempre em português do Brasil.`;
+  }
+  
+  // Scheduling mode (default) - only scheduling
   const basePrompt = `Você é ${agentName}, um assistente virtual de atendimento ao cliente para "${context.businessName}". Sua função principal é ajudar os clientes a agendar consultas de forma eficiente e amigável.
 
 INFORMAÇÕES DO NEGÓCIO:
@@ -266,22 +325,45 @@ async function executeTool(
 
 export async function generateAgentResponse(
   messages: DeepSeekMessage[],
-  context: AgentContext
+  context: AgentContext & { agentMode?: 'support' | 'scheduling' | 'hybrid' }
 ): Promise<string> {
-  const systemPrompt = generateSystemPrompt(context);
+  // Get agent mode (default to scheduling for backward compatibility)
+  const agentMode = context.agentMode || 'scheduling';
+  
+  // For support or hybrid mode, search knowledge base
+  let knowledgeContext = '';
+  if (agentMode === 'support' || agentMode === 'hybrid') {
+    const lastUserMessage = messages.filter(m => m.role === 'user').slice(-1)[0];
+    if (lastUserMessage) {
+      const searchResults = await searchDocuments(
+        context.businessId,
+        lastUserMessage.content,
+        5,
+        0.7
+      );
+      if (searchResults.length > 0) {
+        knowledgeContext = buildContextFromResults(searchResults);
+      }
+    }
+  }
+  
+  const systemPrompt = generateSystemPrompt(context, agentMode, knowledgeContext);
   
   let currentMessages = [
     { role: 'system' as const, content: systemPrompt },
     ...messages,
   ];
   
+  // Determine which tools to use based on mode
+  const availableTools = agentMode === 'support' ? [] : tools;
+  
   // Allow up to 3 tool calls in a conversation turn
   for (let i = 0; i < 3; i++) {
     const response = await deepseek.chat.completions.create({
       model: 'deepseek-chat',
       messages: currentMessages,
-      tools: tools,
-      tool_choice: 'auto',
+      tools: availableTools.length > 0 ? availableTools : undefined,
+      tool_choice: availableTools.length > 0 ? 'auto' : undefined,
       temperature: 0.7,
       max_tokens: 1000,
     });

@@ -130,6 +130,7 @@ export async function POST(request: NextRequest) {
       businessId: businessId,
       businessName: instance.businesses?.name || 'Negocio',
       agentName: agentConfig?.agent_name,
+      agentMode: agentConfig?.agent_mode || 'scheduling',
       services: (agentConfig?.services || []) as Service[],
       workingHours: (workingHours || []) as WorkingHours[],
       appointmentDuration: instance.businesses?.appointment_duration || 30,

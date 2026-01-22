@@ -12,6 +12,7 @@ import {
   Bot,
   Smartphone,
   Clock,
+  FileText,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -24,6 +25,7 @@ const navigation = [
   { name: "Conversas", href: "/conversations", icon: MessageSquare },
   { name: "Agendamentos", href: "/appointments", icon: Calendar },
   { name: "Calendário", href: "/calendar", icon: Clock },
+  { name: "Documentos", href: "/documents", icon: FileText },
   { name: "Configurações", href: "/settings", icon: Settings },
 ];
 

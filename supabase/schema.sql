@@ -277,3 +277,82 @@ CREATE TRIGGER update_agent_configs_updated_at
 CREATE TRIGGER update_appointments_updated_at
   BEFORE UPDATE ON public.appointments
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+-- Enable pgvector extension for embeddings
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- Documents table for PDF storage and management
+CREATE TABLE IF NOT EXISTS public.documents (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  business_id UUID REFERENCES public.businesses(id) ON DELETE CASCADE NOT NULL,
+  filename TEXT NOT NULL,
+  original_filename TEXT NOT NULL,
+  file_path TEXT NOT NULL,
+  file_size INTEGER NOT NULL,
+  mime_type TEXT DEFAULT 'application/pdf',
+  status TEXT DEFAULT 'processing' CHECK (status IN ('processing', 'completed', 'failed')),
+  chunk_count INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Document chunks table with embeddings for RAG
+CREATE TABLE IF NOT EXISTS public.document_chunks (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  document_id UUID REFERENCES public.documents(id) ON DELETE CASCADE NOT NULL,
+  business_id UUID REFERENCES public.businesses(id) ON DELETE CASCADE NOT NULL,
+  content TEXT NOT NULL,
+  chunk_index INTEGER NOT NULL,
+  embedding vector(1536), -- OpenAI ada-002 embedding dimension
+  metadata JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Create index for vector similarity search
+CREATE INDEX IF NOT EXISTS document_chunks_embedding_idx 
+ON public.document_chunks 
+USING ivfflat (embedding vector_cosine_ops)
+WITH (lists = 100);
+
+-- Create index for business_id filtering
+CREATE INDEX IF NOT EXISTS document_chunks_business_id_idx 
+ON public.document_chunks(business_id);
+
+-- Update agent_configs to include agent mode
+ALTER TABLE public.agent_configs 
+ADD COLUMN IF NOT EXISTS agent_mode TEXT DEFAULT 'scheduling' 
+CHECK (agent_mode IN ('support', 'scheduling', 'hybrid'));
+
+-- Add comment to explain modes
+COMMENT ON COLUMN public.agent_configs.agent_mode IS 
+'Agent operation mode: support (only answers from documents), scheduling (only appointments), hybrid (both)';
+
+-- Function for semantic search using vector similarity
+CREATE OR REPLACE FUNCTION search_document_chunks(
+  query_embedding vector(1536),
+  match_business_id uuid,
+  match_count int DEFAULT 5,
+  similarity_threshold float DEFAULT 0.7
+)
+RETURNS TABLE (
+  content text,
+  similarity float,
+  metadata jsonb,
+  document_id uuid
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT
+    document_chunks.content,
+    1 - (document_chunks.embedding <=> query_embedding) as similarity,
+    document_chunks.metadata,
+    document_chunks.document_id
+  FROM document_chunks
+  WHERE document_chunks.business_id = match_business_id
+    AND 1 - (document_chunks.embedding <=> query_embedding) > similarity_threshold
+  ORDER BY document_chunks.embedding <=> query_embedding
+  LIMIT match_count;
+END;
+$$;

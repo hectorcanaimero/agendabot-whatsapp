@@ -154,3 +154,35 @@ export interface AgentContext {
   availableSlots: string[];
   customPrompt?: string;
 }
+
+// Document and RAG types
+export interface Document {
+  id: string;
+  business_id: string;
+  filename: string;
+  original_filename: string;
+  file_path: string;
+  file_size: number;
+  mime_type: string;
+  status: 'processing' | 'completed' | 'failed';
+  chunk_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DocumentChunk {
+  id: string;
+  document_id: string;
+  business_id: string;
+  content: string;
+  chunk_index: number;
+  embedding: number[];
+  metadata: Record<string, any>;
+  created_at: string;
+}
+
+export type AgentMode = 'support' | 'scheduling' | 'hybrid';
+
+export interface AgentConfigExtended extends AgentConfig {
+  agent_mode: AgentMode;
+}
